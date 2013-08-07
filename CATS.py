@@ -1,8 +1,3 @@
-#I made a mistake putting the core of the program in the module, hopefully this fixes it
-#
-#I'm also probably going to want to make Form read from another file
-#so it is easier to edit
-#
 #This program might be getting a little to hot to handle
 #I'm going to want to add some sort of logging feature soon, I'm going to want
 #to find some way to export the list out, and import it again.
@@ -38,7 +33,7 @@ class Core():
         robotData = self.mainForm.askNewBot()
         tmpRobot = Robot(robotData)
         self.roboRegister.addRobot(tmpRobot)
-        if tmpRobot in self.roboRegister.robotList:
+        if tmpRobot in self.roboRegister:
             self.mainForm.addBotConfirm()
         else:
             self.mainForm.generalError()
@@ -49,7 +44,7 @@ class Core():
 
     def displayBots(self):
         self.mainForm.robotListHeader()
-        for robot in self.roboRegister.robotList:
+        for robot in self.roboRegister:
             self.mainForm.printRobot(robot)
         input()
         

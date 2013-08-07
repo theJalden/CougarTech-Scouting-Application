@@ -5,16 +5,15 @@
 #Program, and then find some way to make it all fit together
 
 
-class RobotList():
-    #This class I intend to just be an object containing all of the robots in
-    #play. This class is nothing more than a glorified list
-    def __init__(self):
-        self.robotList = []
-        self.robotKeys = []
+class RobotList(list):
+    """This class inherits from the list class, it will handle all robot objects"""
+##    def __init__(self):
+##        self.robotList = []
+##        self.robotKeys = []
 
 
     def __str__(self):
-        return str([robot.robotNum for robot in self.robotList])
+        return str([robot.robotNum for robot in self])
 
     def addRobot(self, robot):
         """
@@ -24,18 +23,18 @@ class RobotList():
         """
         #at this point if two different robots share the same number,
         #it will try to add the robot, but may end up freaking out.
-        if robot in self.robotList:
+        if robot in self:
             return False
-        elif self.robotList == []:
-            self.robotList.append(robot)
-            return True
-        elif robot.robotNum >= self.robotList[-1].robotNum:
+        elif self == []:
+            self.append(robot
+        elif robot.robotNum >= self[-1].robotNum:
             self.robotList.append(robot)
         else:
             index = self._binSearchIndex(robot.robotNum)
-            self.robotList.insert(index, robot)
+            self.insert(index, robot)
         self.robotKeys = [robot.robotNum for robot in self.robotList]
         #update the key List
+                return True
 
 
     def getRobot(self, robotNum):
@@ -44,7 +43,7 @@ class RobotList():
 
     def removeRobot(self, robot):
         #Try statement scheduled to be removed, will take care of error handly in Form
-        try: self.robotList.remove(robot)
+        try: self.remove(robot)
 
         except:
             "I need to look up what goes here"
@@ -59,7 +58,7 @@ class RobotList():
         #after much consternation this works!, it returns the index of the lowest
         #roboNum above the given one
         import math
-        tmpRoboList = self.robotList[:]
+        tmpRoboList = self[:]
         while len(tmpRoboList) != 1:
             tmpIndex = math.ceil(len(tmpRoboList)/2) - 1 #Splits the list in half, bias towards lower number, just what I need!
             if robotNum < tmpRoboList[tmpIndex].robotNum:
@@ -68,17 +67,16 @@ class RobotList():
             elif robotNum > tmpRoboList[tmpIndex].robotNum:
                 tmpRoboList = tmpRoboList[(tmpIndex+1):]
                 
-        return self.robotList.index(tmpRoboList[0]) #returns the index of the robot just greater than the tested one, I hope
+        return self.index(tmpRoboList[0]) #returns the index of the robot just greater than the tested one, I hope
 
 
 class Robot():
     def __init__(self, robotData):
-        self.robotNum = robotData[0]
-        
-        self.weight = robotData[1]["Weight"]
-        self.height = robotData[1]["Height"]
-        self.length = robotData[1]["Length"]
-        self.width  = robotData[1]["Width"]
+        self.robotNum = robotData["teamNumber"]
+        self.weight   = robotData["Weight"]
+        self.height   = robotData["Height"]
+        self.length   = robotData["Length"]
+        self.width    = robotData["Width"]
         
         self.R = 0 #number of rounds robot has been in
 
@@ -104,14 +102,14 @@ class Form():
         pitData = {}
         robotNum = int(input("What Number is the robot?: "))
         pitData["teamNumber"] = robotNum
-
+        #Team number is a required field
         for field in FIELDS:
             entry = input(field + ": ")
             if entry:
                 pitData[field] = entry
             else:
                 pitData[field] = "None"
-        return (robotNum, pitData)
+        return pitData
 
     def deleteBot(self, botList):
         robotNum = int(input("What Number is the robot?: "))
