@@ -7,7 +7,7 @@
 
 class RobotList():
     #This class I intend to just be an object containing all of the robots in
-    #play. To make my life easier I am making this a sorted list
+    #play. This class is nothing more than a glorified list
     def __init__(self):
         self.robotList = []
         self.robotKeys = []
@@ -72,13 +72,13 @@ class RobotList():
 
 
 class Robot():
-    def __init__(self, number):
-        self.robotNum = number
+    def __init__(self, robotData):
+        self.robotNum = robotData[0]
         
-        self.weight = None
-        self.height = None
-        self.length = None
-        self.width  = None
+        self.weight = robotData[1]["Weight"]
+        self.height = robotData[1]["Height"]
+        self.length = robotData[1]["Length"]
+        self.width  = robotData[1]["Width"]
         
         self.R = 0 #number of rounds robot has been in
 
@@ -100,14 +100,22 @@ class Form():
 
     def askNewBot(self):
         #asks the user what the Number for the robot is
-
-        #TODO: Type checking, and more data points (weight dimensions, etc)
+        FIELDS = ("Weight", "Height", "Length", "Width")
+        pitData = {}
         robotNum = int(input("What Number is the robot?: "))
-        return robotNum
+        pitData["teamNumber"] = robotNum
+
+        for field in FIELDS:
+            entry = input(field + ": ")
+            if entry:
+                pitData[field] = entry
+            else:
+                pitData[field] = "None"
+        return (robotNum, pitData)
 
     def deleteBot(self, botList):
         robotNum = int(input("What Number is the robot?: "))
-        if roboNum not in botList.robotKeys:
+        if robotNum not in botList.robotKeys:
             print("Error: Robot not in list")
             return False
         #most of the stuff I'm putting in this function should go into core
@@ -118,45 +126,47 @@ class Form():
         #gives the robot the stats tuple, I'll assemble it myself, It will be idiot proof. (with the exception of myself)
         #This needs to change, I'm going to let the core handle this one
         stats = ()
-        robot.update(stats) 
+        robot.update(stats)
 
-class Core():
-    def __init__(self):
-        self.mainForm = Form()
-        self.roboRegister = RobotList()
+    def menu(self):
+        print("--------------------------------------------------" + "\n" +
+              "CATS: CougarTech Scouting Application" + "\n" +
+              "--------------------------------------------------" + "\n" +
+              "\n" +
+              "Choose an option [1-3]:" + "\n" +
+              "\t(1) Add a new robot to the register" + "\n" +
+              "\t(2) Remove a robot from the register" + "\n" +
+              "\t(3) View Robot List" + "\n" +
+              "\t(4) Quit the application" + "\n" +
+              "\n"*10)
+        answer = input(": ")
+        return answer
 
-    def main(self):
-        quitApp = False
-        while not quitApp:
-            whatdo = self.mainForm.menu()
-            if whatdo == 1:
-                self.addNewBot()
-            elif whatdo == 2:
-                self.removeBot()
-            else:
-                quitApp = True
-            
+    def addBotConfirm(self):
+        input("The robot was added successfully")
+
+    def printRobot(self, robot):
+        print(str(robot.robotNum) + "\t" +
+              str(robot.weight) + "\t" +
+              str(robot.height) + "\t" +
+              str(robot.length) + "\t" +
+              str(robot.width))
+
+    def robotListHeader(self):
+        print("Number\tWeight\tHeight\tLength\tWidth")
+        print("-"*48)
+    
+    def generalError(self):
+        input("There was an error :(")
+    
+    def typeError(self):
+        input("You're entry is invalid, please try again")
         
-    def addNewBot(self):
-        robotNum = self.mainForm.askNewBot()
-        tmpRobot = Robot(robotNum)
-        self.roboRegister.addRobot(tmpRobot)
-
-    def removeBot(self):
-        robotNum = self.mainForm.deleteBot()
-        self.roboRegister.removeRobotNum(robotNum)
-    
-    
-    def test(self):
-        i = True
-        while i:
-            self.addNewBot()
-            print(self.roboRegister)
-            end = input("Do you want to add another robot?")
-            if end.lower().strip() != "yes" and end.lower().strip() != "y":
-                i = False
+    def wipError(self):
+        input("This part of the program is not functional, please try again")
 
 if __name__ == "__main__":
     #This is just for developing purposes, I want a check to make sure the module is working as expected
-    newSession = Core()
-    newSession.test()
+##    newSession = Core()
+##    newSession.test()
+    pass
