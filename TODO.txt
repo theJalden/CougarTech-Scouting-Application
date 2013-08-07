@@ -1,0 +1,10 @@
+TODO CATS: In order of no outstanding significance
+
+Create method of saving and loading data
+Make robotList class inherit from List
+clean up adding new robots
+set up matches between robots
+record statistics to the robots
+display statistics on robot list display
+Figure out how to log for debugging purposes
+Rank the list according to statistics, and our own algorithm
